@@ -1,0 +1,26 @@
+{
+  "name": "beetrade-activity",
+  "version": "1.0.0",
+  "description": "BeeTrade 活动页面 - 静态网站 + Serverless API",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "beetrade",
+    "activity",
+    "landing-page",
+    "vercel",
+    "serverless"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  },
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  }
+}

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API 测试工具 - BeeTrade</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h2 {
+      color: #303133;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .test-section {
+      margin-bottom: 30px;
+    }
+
+    .test-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .test-section h3 {
+      color: #606266;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #67C23A 0%, #5daf34 100%);
+      color: white;
+    }
+
+    .btn-info {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .response-box {
+      background: #f5f7fa;
+      border: 1px solid #dcdfe6;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .response-box pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .status-success {
+      background: #67C23A;
+      color: white;
+    }
+
+    .status-error {
+      background: #F56C6C;
+      color: white;
+    }
+
+    .status-info {
+      background: #909399;
+      color: white;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-card h4 {
+      font-size: 0.875rem;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .stat-card p {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .info-box {
+      background: #e1f3ff;
+      border-left: 4px solid #3b82f6;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .info-box p {
+      color: #2563eb;
+      margin: 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧪 API 测试工具</h1>
+      <p>BeeTrade 活动页面 API 接口测试</p>
+    </div>
+
+    <div class="card">
+      <h2>📡 API 配置信息</h2>
+      <div class="info-box">
+        <p><strong>基础 URL:</strong> <code id="apiBaseUrl">http://activity.beetrade.in</code></p>
+        <p><strong>接口路径:</strong> <code>/api/v1/submissions</code></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔍 接口测试</h2>
+
+      <div class="test-section">
+        <h3>1. GET - 获取提交列表</h3>
+        <div class="button-group">
+          <button class="btn-info" onclick="testGetSubmissions()">
+            <span>📥 获取列表</span>
+          </button>
+          <button class="btn-success" onclick="testGetSubmissionsFormatted()">
+            <span>📋 格式化显示</span>
+          </button>
+        </div>
+        <div id="getResponse" class="response-box" style="display: none;"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>2. POST - 提交测试数据</h3>
+        <div class="button-group">
+          <button class="btn-primary" onclick="testPostSubmission()">
+            <span>📤 提交测试数据</span>
+          </button>
+          <button class="btn-warning" onclick="testPostInvalidData()">
+            <span>⚠️ 测试无效数据</span>
+          </button>
+        </div>
+        <div id="postResponse" class="response-box" style="display: none;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 统计信息</h2>
+      <div class="stats">
+        <div class="stat-card">
+          <h4>总提交数</h4>
+          <p id="totalCount">-</p>
+        </div>
+        <div class="stat-card">
+          <h4>最新提交</h4>
+          <p id="latestSubmission">-</p>
+        </div>
+        <div class="stat-card">
+          <h4>API 状态</h4>
+          <p id="apiStatus">-</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = '';
+    const API_ENDPOINT = '/api/v1/submissions';
+
+    // 显示响应
+    function showResponse(elementId, status, data, time) {
+      const element = document.getElementById(elementId);
+      element.style.display = 'block';
+
+      const statusClass = status === 'success' ? 'status-success' :
+                         status === 'error' ? 'status-error' : 'status-info';
+
+      element.innerHTML = `
+        <span class="status ${statusClass}">${status.toUpperCase()}</span>
+        ${time ? `<span class="status status-info">响应时间: ${time}ms</span>` : ''}
+        <pre>${JSON.stringify(data, null, 2)}</pre>
+      `;
+    }
+
+    // 显示加载状态
+    function showLoading(buttonElement) {
+      buttonElement.disabled = true;
+      const originalContent = buttonElement.innerHTML;
+      buttonElement.innerHTML = '<span class="loader"></span><span>加载中...</span>';
+      return originalContent;
+    }
+
+    // 恢复按钮状态
+    function restoreButton(buttonElement, originalContent) {
+      buttonElement.disabled = false;
+      buttonElement.innerHTML = originalContent;
+    }
+
+    // 测试 GET 请求
+    async function testGetSubmissions() {
+      const button = event.target.closest('button');
+      const originalContent = showLoading(button);
+
+      const startTime = Date.now();
+
+      try {
+        const response = await fetch(`${API_BASE_URL}${API_ENDPOINT}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+        const time = Date.now() - startTime;
+
+        if (response.ok) {
+          showResponse('getResponse', 'success', {
+            message: '获取成功',
+            total: data.length,
+            data: data.slice(0, 5) // 只显示前5条
+          }, time);
+
+          // 更新统计信息
+          document.getElementById('totalCount').textContent = data.length;
+          document.getElementById('latestSubmission').textContent = data[0]?.name || '-';
+          document.getElementById('apiStatus').textContent = '✅ 正常';
+        } else {
+          showResponse('getResponse', 'error', data, time);
+        }
+      } catch (error) {
+        showResponse('getResponse', 'error', {
+          message: '请求失败',
+          error: error.message
+        });
+        document.getElementById('apiStatus').textContent = '❌ 异常';
+      } finally {
+        restoreButton(button, originalContent);
+      }
+    }
+
+    // 测试 GET 请求（格式化）
+    async function testGetSubmissionsFormatted() {
+      const button = event.target.closest('button');
+      const originalContent = showLoading(button);
+
+      const startTime = Date.now();
+
+      try {
+        const response = await fetch(`${API_BASE_URL}${API_ENDPOINT}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+        const time = Date.now() - startTime;
+
+        if (response.ok) {
+          showResponse('getResponse', 'success', data, time);
+
+          // 更新统计信息
+          document.getElementById('totalCount').textContent = data.length;
+          document.getElementById('latestSubmission').textContent = data[0]?.name || '-';
+          document.getElementById('apiStatus').textContent = '✅ 正常';
+        } else {
+          showResponse('getResponse', 'error', data, time);
+        }
+      } catch (error) {
+        showResponse('getResponse', 'error', {
+          message: '请求失败',
+          error: error.message
+        });
+        document.getElementById('apiStatus').textContent = '❌ 异常';
+      } finally {
+        restoreButton(button, originalContent);
+      }
+    }
+
+    // 测试 POST 请求
+    async function testPostSubmission() {
+      const button = event.target.closest('button');
+      const originalContent = showLoading(button);
+
+      const testData = {
+        name: "测试用户 " + Date.now(),
+        email: `test${Date.now()}@example.com`,
+        phone: "9876543210",
+        telegram: "@testuser",
+        whatsapp: "9876543210"
+      };
+
+      const startTime = Date.now();
+
+      try {
+        const response = await fetch(`${API_BASE_URL}${API_ENDPOINT}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(testData)
+        });
+
+        const data = await response.json();
+        const time = Date.now() - startTime;
+
+        if (response.ok) {
+          showResponse('postResponse', 'success', {
+            message: '提交成功',
+            request: testData,
+            response: data
+          }, time);
+        } else {
+          showResponse('postResponse', 'error', {
+            message: '提交失败',
+            request: testData,
+            response: data
+          }, time);
+        }
+      } catch (error) {
+        showResponse('postResponse', 'error', {
+          message: '请求失败',
+          request: testData,
+          error: error.message
+        });
+      } finally {
+        restoreButton(button, originalContent);
+      }
+    }
+
+    // 测试无效数据
+    async function testPostInvalidData() {
+      const button = event.target.closest('button');
+      const originalContent = showLoading(button);
+
+      const invalidData = {
+        name: "A", // 太短
+        email: "invalid-email", // 无效邮箱
+        phone: "123", // 无效手机号
+        telegram: "",
+        whatsapp: ""
+      };
+
+      const startTime = Date.now();
+
+      try {
+        const response = await fetch(`${API_BASE_URL}${API_ENDPOINT}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(invalidData)
+        });
+
+        const data = await response.json();
+        const time = Date.now() - startTime;
+
+        showResponse('postResponse', response.ok ? 'success' : 'error', {
+          message: '测试无效数据',
+          request: invalidData,
+          response: data
+        }, time);
+      } catch (error) {
+        showResponse('postResponse', 'error', {
+          message: '请求失败',
+          request: invalidData,
+          error: error.message
+        });
+      } finally {
+        restoreButton(button, originalContent);
+      }
+    }
+
+    // 页面加载时自动获取统计信息
+    window.addEventListener('load', async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}${API_ENDPOINT}`);
+        const data = await response.json();
+
+        document.getElementById('totalCount').textContent = data.length;
+        document.getElementById('latestSubmission').textContent = data[0]?.name || '-';
+        document.getElementById('apiStatus').textContent = '✅ 正常';
+      } catch (error) {
+        document.getElementById('apiStatus').textContent = '❌ 异常';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="Join BeeTrade - Earn money anytime, anywhere with just your mobile phone">
+  <meta name="keywords" content="BeeTrade,earn money,mobile trading,UPI,income">
+  <title>BeeTrade - Earn Anytime, Anywhere 💰</title>
+
+  <!-- 样式文件 -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Favicon（可选） -->
+  <!-- <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon"> -->
+
+  <!-- Facebook Pixel Code -->
+  <script>
+    // Load config first (will be overridden by config.js)
+    window.FB_PIXEL_ID = '1571699977316147';
+  </script>
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+
+    // Initialize Facebook Pixel
+    // Advanced Matching will be configured in facebook-pixel.js after DOM loads
+    fbq('init', window.FB_PIXEL_ID, {}, {
+      agent: 'custom_code',  // Custom implementation identifier
+      eventID: 'pageview_' + Date.now()  // Unique event ID for deduplication
+    });
+
+    // Track PageView event
+    fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=1571699977316147&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- End Facebook Pixel Code -->
+</head>
+<body>
+  <!-- 主容器 -->
+  <div class="container">
+    <!-- Left: Promotion Content -->
+    <section class="promotion-section">
+      <div class="carousel-container">
+        <div class="carousel-wrapper">
+          <div class="carousel-slides">
+            <div class="carousel-slide active">
+              <img src="assets/images/activities-1.jpg" alt="BeeTrade Promotion 1" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22%3E%3Crect fill=%22%2367C23A%22 width=%22600%22 height=%22400%22/%3E%3Ctext fill=%22white%22 font-family=%22sans-serif%22 font-size=%2232%22 font-weight=%22bold%22 text-anchor=%22middle%22 x=%22300%22 y=%22180%22%3EBeeTrade%3C/text%3E%3Ctext fill=%22white%22 font-family=%22sans-serif%22 font-size=%2220%22 text-anchor=%22middle%22 x=%22300%22 y=%22220%22%3EEarn Anytime, Anywhere%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/images/activities-2.jpg" alt="BeeTrade Promotion 2" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22%3E%3Crect fill=%22%233b82f6%22 width=%22600%22 height=%22400%22/%3E%3Ctext fill=%22white%22 font-family=%22sans-serif%22 font-size=%2232%22 font-weight=%22bold%22 text-anchor=%22middle%22 x=%22300%22 y=%22180%22%3EEarn Daily%3C/text%3E%3Ctext fill=%22white%22 font-family=%22sans-serif%22 font-size=%2220%22 text-anchor=%22middle%22 x=%22300%22 y=%22220%22%3EStart Trading Now%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/images/activities-3.jpg" alt="BeeTrade Promotion 3" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22%3E%3Crect fill=%22%23fb923c%22 width=%22600%22 height=%22400%22/%3E%3Ctext fill=%22white%22 font-family=%22sans-serif%22 font-size=%2232%22 font-weight=%22bold%22 text-anchor=%22middle%22 x=%22300%22 y=%22180%22%3EJoin Now%3C/text%3E%3Ctext fill=%22white%22 font-family=%22sans-serif%22 font-size=%2220%22 text-anchor=%22middle%22 x=%22300%22 y=%22220%22%3EGet %E2%82%B9100 Bonus%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/images/activities-4.jpg" alt="BeeTrade Promotion 4" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22%3E%3Crect fill=%22%23fb923c%22 width=%22600%22 height=%22400%22/%3E%3Ctext fill=%22white%22 font-family=%22sans-serif%22 font-size=%2232%22 font-weight=%22bold%22 text-anchor=%22middle%22 x=%22300%22 y=%22180%22%3EJoin Now%3C/text%3E%3Ctext fill=%22white%22 font-family=%22sans-serif%22 font-size=%2220%22 text-anchor=%22middle%22 x=%22300%22 y=%22220%22%3EGet %E2%82%B9100 Bonus%3C/text%3E%3C/svg%3E'">
+            </div>
+          </div>
+
+          <!-- 轮播控制按钮 -->
+          <button class="carousel-btn carousel-btn-prev" aria-label="Previous slide">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="carousel-btn carousel-btn-next" aria-label="Next slide">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- 轮播指示器 -->
+        <div class="carousel-indicators">
+          <button class="carousel-indicator active" data-slide="0" aria-label="Go to slide 1"></button>
+          <button class="carousel-indicator" data-slide="1" aria-label="Go to slide 2"></button>
+          <button class="carousel-indicator" data-slide="2" aria-label="Go to slide 3"></button>
+          <button class="carousel-indicator" data-slide="3" aria-label="Go to slide 4"></button>
+        </div>
+      </div>
+
+      <div class="promotion-content">
+        <h1 class="title">Want extra cash with your phone? </h1>
+        <p class="subtitle">Just like these players! 💰</p>
+        <p class="subtitle">⚠️ Long-term gig, not a quick fix</p>
+
+        <div class="description">
+            <ul class="highlights">
+                <li>
+                    <span class="icon">✅</span>
+                    <span class="text">Flex time, no location lock</span>
+                </li>
+                <li>
+                    <span class="icon">✅</span>
+                    <span class="text">Only 1 phone needed</span>
+                </li>
+                <li>
+                    <span class="icon">✅</span>
+                    <span class="text">Auto-run, super easy</span>
+                </li>
+                <li>
+                    <span class="icon">✅</span>
+                    <span class="text">Earnings per order: 2.5% + 6 ₹</span>
+                </li>
+                <li>
+                    <span class="icon">✅</span>
+                    <span class="text">NEW USER:First order bonus of 50 ₹</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="how-to-start">
+          <h3>How to get started?</h3>
+          <p>Just 3 simple steps:</p>
+        </div>
+
+        <ul class="highlights">
+          <li>
+            <span class="icon">1️⃣</span>
+            <span class="text"><strong>Register</strong> - Quick signup process</span>
+          </li>
+          <li>
+            <span class="icon">2️⃣</span>
+            <span class="text"><strong>Link your UPI</strong> - Secure payment setup</span>
+          </li>
+          <li>
+            <span class="icon">3️⃣</span>
+            <span class="text"><strong>Start placing orders</strong> - Begin earning profits</span>
+          </li>
+        </ul>
+        <div class="features">
+          <p>DM for details 📩</p>
+          <p>If this doesn't suit you, please just scroll past. Thank you.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: Registration Form -->
+    <section class="form-section">
+      <div class="form-header">
+        <h2>Join BeeTrade Now</h2>
+        <p class="form-subtitle">Fill in your information to start earning</p>
+      </div>
+
+      <form id="submissionForm" novalidate>
+        <!-- Name -->
+        <div class="form-group">
+          <label for="name">
+            Full Name <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            required
+            autocomplete="name"
+          >
+          <span class="error-message" id="name-error"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">
+            Email <span class="required">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="example@email.com"
+            required
+            autocomplete="email"
+          >
+          <span class="error-message" id="email-error"></span>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">
+            Phone Number <span class="required">*</span>
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Enter your 10-digit phone number"
+            required
+            autocomplete="tel"
+          >
+          <span class="error-message" id="phone-error"></span>
+        </div>
+
+        <!-- Telegram -->
+        <div class="form-group">
+          <label for="telegram">
+            Telegram <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="telegram"
+            name="telegram"
+            placeholder="@username or phone number"
+            required
+          >
+          <span class="error-message" id="telegram-error"></span>
+        </div>
+
+        <!-- WhatsApp (Optional) -->
+        <div class="form-group">
+          <label for="whatsapp">
+            WhatsApp <span class="optional">(Optional)</span>
+          </label>
+          <input
+            type="text"
+            id="whatsapp"
+            name="whatsapp"
+            placeholder="+91 9876543210"
+          >
+          <span class="error-message" id="whatsapp-error"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="btn-text">Submit</span>
+          <span class="loader hidden"></span>
+        </button>
+      </form>
+    </section>
+  </div>
+
+  <!-- Customer Service Dialog -->
+  <div id="customerDialog" class="dialog-overlay hidden">
+    <div class="dialog-content">
+      <button class="close-btn" id="closeDialog" aria-label="Close dialog">&times;</button>
+
+      <div class="dialog-icon">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="11" fill="#67C23A"/>
+          <path d="M7 12l3 3 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <h3>Submission Successful!</h3>
+      <p class="dialog-message">Thank you for joining BeeTrade!</p>
+      <p class="dialog-message">Our customer service team will contact you soon.</p>
+      <p class="dialog-prompt">Need immediate assistance? Click the button below</p>
+
+      <button class="customer-service-btn" id="customerServiceBtn">
+        <span>Contact Customer Service</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden" role="alert"></div>
+
+  <!-- JavaScript文件 -->
+  <script src="config.js"></script>
+  <script src="js/validator.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/facebook-pixel.js"></script>
+  <script src="js/carousel.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

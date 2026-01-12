@@ -1,0 +1,347 @@
+/**
+ * 响应式样式
+ * 适配不同屏幕尺寸
+ */
+
+/* ========== 大屏幕（>1200px） ========== */
+@media (min-width: 1201px) {
+  .container {
+    padding: 48px;
+  }
+  
+  .promotion-content .title {
+    font-size: 2.5rem;
+  }
+}
+
+/* ========== 标准桌面（769px - 1200px） ========== */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .container {
+    gap: 32px;
+    padding: 32px;
+  }
+  
+  .promotion-content .title {
+    font-size: 1.875rem;
+  }
+}
+
+/* ========== 平板（481px - 768px） ========== */
+@media (max-width: 768px) {
+  /* 移动端改为上下布局 */
+  .container {
+    flex-direction: column;
+  }
+  
+  /* 使用 display: contents 让子元素提升到 container 层级 */
+  .promotion-section {
+    width: 100%;
+    display: contents;
+  }
+  
+  /* 图片在最上方 */
+  .promotion-image {
+    order: 1;
+    width: 100%;
+    padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+    background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+  }
+  
+  /* 表单在图片下方 */
+  .form-section {
+    order: 2;
+    width: 100%;
+    padding: var(--spacing-lg) var(--spacing-md);
+    background: #fff9ed;
+  }
+  
+  /* 推广文字内容在最下方 */
+  .promotion-content {
+    order: 3;
+    width: 100%;
+    padding: var(--spacing-lg) var(--spacing-md);
+    background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    color: white;
+  }
+  
+  .highlights {
+    grid-template-columns: 1fr;
+  }
+  
+  .earnings-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .promotion-content .title {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+  
+  .promotion-content .subtitle {
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .form-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  /* 客服弹窗适配 */
+  .dialog-content {
+    padding: 32px 24px;
+    max-width: 90%;
+  }
+  
+  .dialog-content h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* ========== 手机（≤480px） ========== */
+@media (max-width: 480px) {
+  /* 确保移动端上下布局 */
+  .container {
+    flex-direction: column;
+  }
+  
+  /* 使用 display: contents 保持顺序控制 */
+  .promotion-section {
+    width: 100%;
+    display: contents;
+  }
+  
+  /* 图片区域样式 */
+  .promotion-image {
+    order: 1;
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-md);
+    background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+  }
+  
+  /* 表单区域样式 */
+  .form-section {
+    order: 2;
+    width: 100%;
+    padding: var(--spacing-md);
+    background: #fff9ed;
+  }
+  
+  /* 推广内容区域样式 */
+  .promotion-content {
+    order: 3;
+    width: 100%;
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    color: white;
+  }
+  
+  .promotion-content .title {
+    font-size: 1.5rem;
+  }
+  
+  .promotion-content .subtitle {
+    font-size: 0.875rem;
+  }
+  
+  .promotion-content .description {
+    font-size: 0.875rem;
+  }
+  
+  .highlights li {
+    padding: 10px;
+  }
+  
+  .highlights .text {
+    font-size: 0.875rem;
+  }
+  
+  .form-header h2 {
+    font-size: 1.25rem;
+  }
+  
+  .form-header .form-subtitle {
+    font-size: 0.75rem;
+  }
+  
+  #submissionForm {
+    gap: 16px;
+  }
+  
+  .form-group input {
+    padding: 10px 14px;
+    font-size: 16px; /* 防止iOS自动缩放 */
+  }
+  
+  .submit-btn {
+    padding: 12px 20px;
+    font-size: 0.875rem;
+  }
+  
+  /* Toast提示适配 */
+  .toast {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    transform: none;
+    min-width: auto;
+    width: calc(100% - 20px);
+  }
+  
+  @keyframes toastFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* 客服弹窗适配 */
+  .dialog-content {
+    padding: 24px 20px;
+    width: 95%;
+  }
+  
+  .dialog-content h3 {
+    font-size: 1.125rem;
+  }
+  
+  .dialog-message {
+    font-size: 0.875rem;
+  }
+  
+  .customer-service-btn {
+    padding: 12px 20px;
+    font-size: 0.875rem;
+  }
+}
+
+/* ========== 超小屏幕（≤360px） ========== */
+@media (max-width: 360px) {
+  .promotion-content .title {
+    font-size: 1.25rem;
+  }
+  
+  .form-header h2 {
+    font-size: 1.125rem;
+  }
+  
+  .highlights {
+    gap: 8px;
+  }
+  
+  .highlights li {
+    padding: 8px;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ========== 横屏模式适配 ========== */
+@media (max-width: 768px) and (orientation: landscape) {
+  .container {
+    flex-direction: column;
+  }
+  
+  /* 保持顺序：图片 -> 表单 -> 内容 */
+  .promotion-section {
+    width: 100%;
+    display: contents;
+  }
+  
+  .promotion-image {
+    order: 1;
+    background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    padding: var(--spacing-md);
+  }
+  
+  .promotion-image img {
+    max-height: 40vh;
+    object-fit: cover;
+  }
+  
+  .form-section {
+    order: 2;
+    width: 100%;
+    background: #fff9ed;
+  }
+  
+  .promotion-content {
+    order: 3;
+    background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    color: white;
+    padding: var(--spacing-md);
+  }
+  
+  #submissionForm {
+    gap: 12px;
+  }
+  
+  .form-group input {
+    padding: 8px 12px;
+  }
+}
+
+/* ========== 打印样式 ========== */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  
+  .container {
+    box-shadow: none;
+    max-width: 100%;
+  }
+  
+  .submit-btn,
+  .dialog-overlay,
+  .toast {
+    display: none !important;
+  }
+  
+  .promotion-image img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+  
+  .form-group input {
+    border: 1px solid #000;
+  }
+}
+
+/* ========== 高对比度模式（无障碍） ========== */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: #000;
+    --text-primary: #000;
+    --bg-color: #FFF;
+  }
+  
+  .form-group input {
+    border-width: 2px;
+  }
+  
+  .submit-btn {
+    border: 2px solid #000;
+  }
+}
+
+/* ========== 深色模式（可选） ========== */
+@media (prefers-color-scheme: dark) {
+  /* 如果后续需要深色模式，可在此添加样式 */
+  /* 当前版本暂不实现深色模式 */
+}
+
+/* ========== 减少动画（无障碍） ========== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
