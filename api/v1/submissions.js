@@ -166,8 +166,32 @@ async function handleGet() {
 // POST 请求处理 - 创建新提交
 async function handlePost(request) {
   try {
-    // 解析请求体
-    const body = await request.json();
+    // 解析请求体 - 兼容不同的 Request 对象
+    let body;
+    try {
+      // 尝试使用标准的 Request.json() 方法
+      body = await request.json();
+    } catch (jsonError) {
+      // 如果失败，尝试读取文本并解析
+      try {
+        const text = typeof request.text === 'function'
+          ? await request.text()
+          : request.body;
+        body = typeof text === 'string' ? JSON.parse(text) : text;
+      } catch (parseError) {
+        console.error('Failed to parse request body:', parseError);
+        return new Response(
+          JSON.stringify({
+            detail: 'Invalid JSON in request body',
+            message: parseError.message,
+          }),
+          {
+            status: 400,
+            headers: corsHeaders,
+          }
+        );
+      }
+    }
 
     // 验证数据
     const errors = validateSubmission(body);
