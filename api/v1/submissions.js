@@ -44,10 +44,16 @@ ${submission.whatsapp ? `📞 *WhatsApp:* ${submission.whatsapp}` : ''}
 _提交编号: ${submission.id}_
 `.trim();
 
-    // 发送到 Telegram
+    // 发送到 Telegram（添加超时控制）
     const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-    const response = await fetch(telegramApiUrl, {
+    // 创建超时 Promise
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Telegram request timeout')), 5000);
+    });
+
+    // 创建请求 Promise
+    const fetchPromise = fetch(telegramApiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -59,6 +65,9 @@ _提交编号: ${submission.id}_
         disable_web_page_preview: true,
       }),
     });
+
+    // 使用 Promise.race 实现超时控制
+    const response = await Promise.race([fetchPromise, timeoutPromise]);
 
     const result = await response.json();
 
@@ -166,18 +175,23 @@ async function handleGet() {
 // POST 请求处理 - 创建新提交
 async function handlePost(request) {
   try {
+    console.log('[POST] Starting request handling...');
+
     // 解析请求体 - 兼容不同的 Request 对象
     let body;
     try {
       // 尝试使用标准的 Request.json() 方法
       body = await request.json();
+      console.log('[POST] Request body parsed successfully');
     } catch (jsonError) {
+      console.error('[POST] JSON parse error:', jsonError);
       // 如果失败，尝试读取文本并解析
       try {
         const text = typeof request.text === 'function'
           ? await request.text()
           : request.body;
         body = typeof text === 'string' ? JSON.parse(text) : text;
+        console.log('[POST] Request body parsed from text');
       } catch (parseError) {
         console.error('Failed to parse request body:', parseError);
         return new Response(
@@ -194,8 +208,10 @@ async function handlePost(request) {
     }
 
     // 验证数据
+    console.log('[POST] Validating submission data...');
     const errors = validateSubmission(body);
     if (errors.length > 0) {
+      console.error('[POST] Validation failed:', errors);
       return new Response(
         JSON.stringify({
           detail: errors.join(', '),
@@ -209,7 +225,9 @@ async function handlePost(request) {
     }
 
     // 生成唯一 ID
+    console.log('[POST] Generating unique ID...');
     const id = await kv.incr('submissions:counter');
+    console.log('[POST] Generated ID:', id);
 
     // 获取客户端 IP
     const ipAddress = getClientIP(request);
@@ -228,16 +246,22 @@ async function handlePost(request) {
     };
 
     // 保存到 KV
+    console.log('[POST] Saving to KV...');
     await kv.set(`submission:${id}`, submission);
+    console.log('[POST] Saved to KV successfully');
 
     // 将 ID 添加到列表（最新的在前面）
+    console.log('[POST] Adding ID to list...');
     await kv.lpush('submissions:ids', id);
+    console.log('[POST] Added to list successfully');
 
     // 发送 Telegram 通知（异步，不阻塞响应）
+    console.log('[POST] Triggering Telegram notification (non-blocking)...');
     sendTelegramNotification(submission).catch(error => {
       console.error('Telegram notification failed (non-blocking):', error);
     });
 
+    console.log('[POST] Request completed successfully');
     return new Response(JSON.stringify(submission), {
       status: 201,
       headers: corsHeaders,
