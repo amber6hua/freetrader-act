@@ -7,14 +7,6 @@
 
 import { kv } from '@vercel/kv';
 
-// CORS 头部配置
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Content-Type': 'application/json',
-};
-
 // Telegram Bot 配置（从环境变量读取）
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
@@ -119,26 +111,29 @@ function validateSubmission(data) {
 }
 
 // 获取客户端 IP 地址
-function getClientIP(request) {
+function getClientIP(req) {
   return (
-    request.headers.get('x-forwarded-for')?.split(',')[0] ||
-    request.headers.get('x-real-ip') ||
+    req.headers['x-forwarded-for']?.split(',')[0] ||
+    req.headers['x-real-ip'] ||
+    req.connection?.remoteAddress ||
     'unknown'
   );
 }
 
 // GET 请求处理 - 获取所有提交
-async function handleGet() {
+async function handleGet(req, res) {
   try {
+    console.log('[GET] Fetching submissions...');
+
     // 从 KV 获取所有提交的 ID 列表
     const submissionIds = await kv.lrange('submissions:ids', 0, -1);
 
     if (!submissionIds || submissionIds.length === 0) {
-      return new Response(JSON.stringify([]), {
-        status: 200,
-        headers: corsHeaders,
-      });
+      console.log('[GET] No submissions found');
+      return res.status(200).json([]);
     }
+
+    console.log(`[GET] Found ${submissionIds.length} submission IDs`);
 
     // 获取所有提交的详细数据
     const submissions = await Promise.all(
@@ -153,75 +148,32 @@ async function handleGet() {
       .filter(s => s !== null)
       .sort((a, b) => b.id - a.id);
 
-    return new Response(JSON.stringify(validSubmissions), {
-      status: 200,
-      headers: corsHeaders,
-    });
+    console.log(`[GET] Returning ${validSubmissions.length} valid submissions`);
+    return res.status(200).json(validSubmissions);
   } catch (error) {
-    console.error('GET Error:', error);
-    return new Response(
-      JSON.stringify({
-        detail: 'Failed to fetch submissions',
-        message: error.message,
-      }),
-      {
-        status: 500,
-        headers: corsHeaders,
-      }
-    );
+    console.error('[GET] Error:', error);
+    return res.status(500).json({
+      detail: 'Failed to fetch submissions',
+      message: error.message,
+    });
   }
 }
 
 // POST 请求处理 - 创建新提交
-async function handlePost(request) {
+async function handlePost(req, res) {
   try {
     console.log('[POST] Starting request handling...');
-
-    // 解析请求体 - 兼容不同的 Request 对象
-    let body;
-    try {
-      // 尝试使用标准的 Request.json() 方法
-      body = await request.json();
-      console.log('[POST] Request body parsed successfully');
-    } catch (jsonError) {
-      console.error('[POST] JSON parse error:', jsonError);
-      // 如果失败，尝试读取文本并解析
-      try {
-        const text = typeof request.text === 'function'
-          ? await request.text()
-          : request.body;
-        body = typeof text === 'string' ? JSON.parse(text) : text;
-        console.log('[POST] Request body parsed from text');
-      } catch (parseError) {
-        console.error('Failed to parse request body:', parseError);
-        return new Response(
-          JSON.stringify({
-            detail: 'Invalid JSON in request body',
-            message: parseError.message,
-          }),
-          {
-            status: 400,
-            headers: corsHeaders,
-          }
-        );
-      }
-    }
+    console.log('[POST] Request body:', req.body);
 
     // 验证数据
     console.log('[POST] Validating submission data...');
-    const errors = validateSubmission(body);
+    const errors = validateSubmission(req.body);
     if (errors.length > 0) {
       console.error('[POST] Validation failed:', errors);
-      return new Response(
-        JSON.stringify({
-          detail: errors.join(', '),
-          message: 'Validation failed',
-        }),
-        {
-          status: 400,
-          headers: corsHeaders,
-        }
-      );
+      return res.status(400).json({
+        detail: errors.join(', '),
+        message: 'Validation failed',
+      });
     }
 
     // 生成唯一 ID
@@ -230,16 +182,16 @@ async function handlePost(request) {
     console.log('[POST] Generated ID:', id);
 
     // 获取客户端 IP
-    const ipAddress = getClientIP(request);
+    const ipAddress = getClientIP(req);
 
     // 创建提交数据
     const submission = {
       id,
-      name: body.name.trim(),
-      email: body.email.trim(),
-      phone: body.phone.trim(),
-      telegram: body.telegram.trim(),
-      whatsapp: body.whatsapp ? body.whatsapp.trim() : null,
+      name: req.body.name.trim(),
+      email: req.body.email.trim(),
+      phone: req.body.phone.trim(),
+      telegram: req.body.telegram.trim(),
+      whatsapp: req.body.whatsapp ? req.body.whatsapp.trim() : null,
       ip_address: ipAddress,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -262,61 +214,45 @@ async function handlePost(request) {
     });
 
     console.log('[POST] Request completed successfully');
-    return new Response(JSON.stringify(submission), {
-      status: 201,
-      headers: corsHeaders,
-    });
+    return res.status(201).json(submission);
   } catch (error) {
-    console.error('POST Error:', error);
-    return new Response(
-      JSON.stringify({
-        detail: 'Failed to create submission',
-        message: error.message,
-      }),
-      {
-        status: 500,
-        headers: corsHeaders,
-      }
-    );
+    console.error('[POST] Error:', error);
+    return res.status(500).json({
+      detail: 'Failed to create submission',
+      message: error.message,
+    });
   }
 }
 
-// OPTIONS 请求处理 - CORS 预检
-function handleOptions() {
-  return new Response(null, {
-    status: 204,
-    headers: corsHeaders,
-  });
-}
+// 主处理函数 - Vercel Serverless Function 标准格式
+export default async function handler(req, res) {
+  console.log(`[${req.method}] Request received at /api/v1/submissions`);
 
-// 主处理函数
-export default async function handler(request) {
-  const method = request.method;
+  // 设置 CORS 头部
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   // 处理 OPTIONS 请求（CORS 预检）
-  if (method === 'OPTIONS') {
-    return handleOptions();
+  if (req.method === 'OPTIONS') {
+    console.log('[OPTIONS] CORS preflight request');
+    return res.status(204).end();
   }
 
   // 处理 GET 请求
-  if (method === 'GET') {
-    return handleGet();
+  if (req.method === 'GET') {
+    return handleGet(req, res);
   }
 
   // 处理 POST 请求
-  if (method === 'POST') {
-    return handlePost(request);
+  if (req.method === 'POST') {
+    return handlePost(req, res);
   }
 
   // 不支持的方法
-  return new Response(
-    JSON.stringify({
-      detail: 'Method not allowed',
-      message: `Method ${method} is not supported`,
-    }),
-    {
-      status: 405,
-      headers: corsHeaders,
-    }
-  );
+  console.log(`[${req.method}] Method not allowed`);
+  return res.status(405).json({
+    detail: 'Method not allowed',
+    message: `Method ${req.method} is not supported`,
+  });
 }

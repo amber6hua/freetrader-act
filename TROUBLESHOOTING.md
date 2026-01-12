@@ -4,7 +4,80 @@
 
 ## 🔍 常见错误
 
-### 1. 运行时超时错误（300秒）
+### 1. API 函数无响应，console 日志不执行
+
+**错误现象：**
+- API 端点 `/api/v1/submissions` 完全无响应
+- Vercel Functions 日志中没有任何 console 输出
+- 请求超时或返回 404
+
+**根本原因：**
+- 使用了错误的函数导出格式
+- Vercel Serverless Functions 需要使用 Node.js HTTP 格式（`req`/`res`），而不是 Web API 格式（`Request`/`Response`）
+
+**解决方案：**
+
+✅ **正确的函数格式：**
+```javascript
+// ✅ 正确 - Vercel Serverless Function 标准格式
+export default async function handler(req, res) {
+  console.log(`[${req.method}] Request received`);
+
+  // 设置 CORS 头部
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // 处理请求
+  if (req.method === 'GET') {
+    return res.status(200).json({ message: 'Success' });
+  }
+
+  if (req.method === 'POST') {
+    const body = req.body; // 直接访问 req.body
+    return res.status(201).json(body);
+  }
+}
+```
+
+❌ **错误的格式（Web API）：**
+```javascript
+// ❌ 错误 - 这是 Web API 格式，Vercel 默认不支持
+export default async function handler(request) {
+  const body = await request.json(); // request.json() 不存在
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+```
+
+**关键区别：**
+| 特性 | Node.js HTTP (正确) | Web API (错误) |
+|------|-------------------|---------------|
+| 请求对象 | `req` | `request` |
+| 响应对象 | `res` | `Response` |
+| 获取请求体 | `req.body` | `await request.json()` |
+| 设置响应头 | `res.setHeader()` | `headers` 对象 |
+| 返回 JSON | `res.json()` | `new Response()` |
+| 获取请求头 | `req.headers['x-header']` | `request.headers.get('x-header')` |
+
+**测试步骤：**
+1. 创建简单测试函数 `api/test.js`：
+   ```javascript
+   export default function handler(req, res) {
+     console.log('✅ Test function executed!');
+     return res.status(200).json({ success: true });
+   }
+   ```
+
+2. 部署并访问 `https://your-domain.vercel.app/api/test`
+
+3. 查看 Vercel Functions 日志，应该能看到 "✅ Test function executed!"
+
+---
+
+### 2. 运行时超时错误（300秒）
 
 **错误信息：**
 ```
@@ -49,23 +122,6 @@ Vercel Runtime Timeout Error: Task timed out after 300 seconds
 3. **检查 Telegram Bot 配置**
    - 如果未配置，系统会自动跳过
    - 如果配置了，确认 Token 和 Chat ID 正确
-
----
-
-### 2. request.json 不是函数
-
-**错误信息：**
-```
-TypeError: request.json is not a function
-```
-
-**原因：**
-- Vercel 不同运行时的 Request 对象不同
-
-**解决方案：**
-- ✅ 已添加兼容性处理
-- 尝试多种解析方法
-- 详细的错误日志
 
 ---
 
@@ -281,6 +337,10 @@ vercel logs
 
 ---
 
-**最后更新时间：** 2026-01-09
+**最后更新时间：** 2026-01-12
 
-**版本：** 1.0.0
+**版本：** 2.0.0
+
+**更新日志：**
+- 2026-01-12: 添加 API 函数无响应问题的解决方案（函数导出格式错误）
+- 2026-01-09: 初始版本
