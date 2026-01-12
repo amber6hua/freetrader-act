@@ -1,6 +1,8 @@
 {
   "version": 2,
   "name": "freetrader-act",
+  "buildCommand": "echo 'No build required'",
+  "outputDirectory": ".",
   "headers": [
     {
       "source": "/api/(.*)",
