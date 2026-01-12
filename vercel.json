@@ -1,18 +1,6 @@
 {
   "version": 2,
   "name": "freetrader-act",
-  "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/v1/submissions",
-      "dest": "/api/v1/submissions.js"
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
