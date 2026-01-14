@@ -3,6 +3,11 @@
  * 处理表单提交的 GET 和 POST 请求
  * 使用 Vercel KV 存储数据
  * 通过 Telegram Bot 发送通知到群组
+ *
+ * 性能优化：
+ * - 使用 context.waitUntil() 确保 Telegram 通知在后台完成
+ * - 立即返回响应给用户，不阻塞 API 调用
+ * - 保证通知一定会发送（即使响应已返回）
  */
 
 import { kv } from '@vercel/kv';
@@ -160,7 +165,7 @@ async function handleGet(req, res) {
 }
 
 // POST 请求处理 - 创建新提交
-async function handlePost(req, res) {
+async function handlePost(req, res, context) {
   try {
     console.log('[POST] Starting request handling...');
     console.log('[POST] Request body:', req.body);
@@ -207,11 +212,28 @@ async function handlePost(req, res) {
     await kv.lpush('submissions:ids', id);
     console.log('[POST] Added to list successfully');
 
-    // 发送 Telegram 通知（异步，不阻塞响应）
-    console.log('[POST] Triggering Telegram notification (non-blocking)...');
-    sendTelegramNotification(submission).catch(error => {
-      console.error('Telegram notification failed (non-blocking):', error);
-    });
+    // 使用 waitUntil 确保 Telegram 通知在后台完成
+    // 这样可以立即返回响应，同时保证通知一定会发送
+    console.log('[POST] Scheduling Telegram notification (background task)...');
+    const telegramTask = sendTelegramNotification(submission)
+      .then(result => {
+        console.log('[POST] Telegram notification completed:', result);
+        return result;
+      })
+      .catch(error => {
+        console.error('[POST] Telegram notification failed:', error);
+        return { success: false, error: error.message };
+      });
+
+    // 使用 waitUntil 确保后台任务完成（如果支持）
+    if (context && typeof context.waitUntil === 'function') {
+      console.log('[POST] Using waitUntil for background task');
+      context.waitUntil(telegramTask);
+    } else {
+      // 降级方案：如果不支持 waitUntil，则等待通知完成
+      console.log('[POST] waitUntil not available, waiting for notification...');
+      await telegramTask;
+    }
 
     console.log('[POST] Request completed successfully');
     return res.status(201).json(submission);
@@ -225,7 +247,7 @@ async function handlePost(req, res) {
 }
 
 // 主处理函数 - Vercel Serverless Function 标准格式
-export default async function handler(req, res) {
+export default async function handler(req, res, context) {
   console.log(`[${req.method}] Request received at /api/v1/submissions`);
 
   // 设置 CORS 头部
@@ -244,9 +266,9 @@ export default async function handler(req, res) {
     return handleGet(req, res);
   }
 
-  // 处理 POST 请求
+  // 处理 POST 请求（传递 context）
   if (req.method === 'POST') {
-    return handlePost(req, res);
+    return handlePost(req, res, context);
   }
 
   // 不支持的方法
