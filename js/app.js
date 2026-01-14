@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // 5. Submission successful
       console.log('Submit success:', response);
-      showToast('Submission successful! Thank you for joining BeeTrade', 'success');
+      showToast('Submission successful! Thank you for joining FreeTrader', 'success');
       
       // 6. 追踪 Facebook Lead 事件（高级匹配）
       if (typeof FacebookPixel !== 'undefined') {
