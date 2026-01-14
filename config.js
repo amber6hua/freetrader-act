@@ -13,7 +13,7 @@ const CONFIG = {
   
   // Customer service link
   // After successful submission, users clicking "Contact Customer Service" will be redirected to this link
-  CUSTOMER_SERVICE_URL: 'https://clickurl.org/wyYCjA',  // Example: Telegram customer service
+  CUSTOMER_SERVICE_URL: '/',  // Example: Telegram customer service
   
   // Other configuration
   TOAST_DURATION: 3000,  // Toast notification duration (milliseconds)
