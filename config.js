@@ -10,9 +10,6 @@ const CONFIG = {
                  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
     ? 'http://localhost:3000'  // 本地开发环境（使用 vercel dev）
     : (typeof window !== 'undefined' ? window.location.origin : ''),  // 生产环境（Vercel 部署后自动使用当前域名）
-
-  // 如果需要使用原始 API，取消下面的注释并注释掉上面的自动检测
-  // API_BASE_URL: 'http://activity.beetrade.in',
   
   // Customer service link
   // After successful submission, users clicking "Contact Customer Service" will be redirected to this link
@@ -23,7 +20,7 @@ const CONFIG = {
   SUBMIT_COOLDOWN: 5000,  // Submit cooldown time (milliseconds)
   
   // Facebook Pixel configuration
-  FACEBOOK_PIXEL_ID: '1571699977316147',  // Facebook Pixel ID
+  FACEBOOK_PIXEL_ID: '',  // Facebook Pixel ID
   ENABLE_ADVANCED_MATCHING: true  // Enable Advanced Matching (hash user data for better ad targeting)
 };
 
