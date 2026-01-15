@@ -3,12 +3,6 @@
   "name": "freetrader-act",
   "buildCommand": "echo 'No build required'",
   "outputDirectory": ".",
-  "routes": [
-    {
-      "src": "/api/.*",
-      "status": 403
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
