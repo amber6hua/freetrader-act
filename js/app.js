@@ -68,10 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1. 收集表单数据
     const formData = {
       name: document.getElementById('name').value.trim(),
-      email: document.getElementById('email').value.trim(),
+      // email: document.getElementById('email').value.trim(),
       phone: document.getElementById('phone').value.trim(),
-      telegram: document.getElementById('telegram').value.trim(),
-      whatsapp: document.getElementById('whatsapp').value.trim() || null
+      // telegram: document.getElementById('telegram').value.trim(),
+      // whatsapp: document.getElementById('whatsapp').value.trim() || null
     };
 
     // 2. 数据清洗（防XSS）
@@ -107,10 +107,12 @@ document.addEventListener('DOMContentLoaded', function() {
       setSubmitButtonLoading(true);
 
       // 调用API
-      const response = await API.submitForm(formData);
+      // const response = await API.submitForm(formData);
+      // 跳转url
+      window.location.href = 'https://t.me/ft2020_bot';
 
       // 5. Submission successful
-      console.log('Submit success:', response);
+      // console.log('Submit success:', response);
       showToast('Submission successful! Thank you for joining FreeTrader', 'success');
       
       // 6. 追踪 Facebook Lead 事件（高级匹配）
