@@ -8,32 +8,32 @@ const Validator = {
    * 验证规则定义
    */
   rules: {
-    name: {
-      required: true,
-      minLength: 2,
-      maxLength: 100,
-      message: 'Please enter a name between 2-100 characters'
-    },
-    email: {
-      required: true,
-      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-      message: 'Please enter a valid email address'
-    },
-    phone: {
-      required: true,
-      pattern: /^[6-9]\d{9}$/,
-      message: 'Please enter a valid 10-digit phone number'
-    },
-    telegram: {
-      required: true,
-      minLength: 1,
-      maxLength: 100,
-      message: 'Please enter your Telegram account'
-    },
-    whatsapp: {
-      required: false,  // Optional field
-      maxLength: 100
-    }
+    // name: {
+    //   required: true,
+    //   minLength: 2,
+    //   maxLength: 100,
+    //   message: 'Please enter a name between 2-100 characters'
+    // },
+    // email: {
+    //   required: true,
+    //   pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    //   message: 'Please enter a valid email address'
+    // },
+    // phone: {
+    //   required: true,
+    //   pattern: /^[6-9]\d{9}$/,
+    //   message: 'Please enter a valid 10-digit phone number'
+    // },
+    // telegram: {
+    //   required: true,
+    //   minLength: 1,
+    //   maxLength: 100,
+    //   message: 'Please enter your Telegram account'
+    // },
+    // whatsapp: {
+    //   required: false,  // Optional field
+    //   maxLength: 100
+    // }
   },
 
   /**

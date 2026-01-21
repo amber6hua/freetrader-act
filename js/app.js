@@ -67,9 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 1. 收集表单数据
     const formData = {
-      name: document.getElementById('name').value.trim(),
+      // name: document.getElementById('name').value.trim(),
       // email: document.getElementById('email').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
+      // phone: document.getElementById('phone').value.trim(),
       // telegram: document.getElementById('telegram').value.trim(),
       // whatsapp: document.getElementById('whatsapp').value.trim() || null
     };
