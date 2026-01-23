@@ -59,6 +59,23 @@ document.addEventListener('DOMContentLoaded', function() {
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
 
+    // 🎯 Track Submit button click event (Facebook Pixel)
+    if (typeof fbq !== 'undefined') {
+      try {
+        const eventID = 'submit_click_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        fbq('track', 'Contact', {
+          content_name: 'FreeTrader Contact',
+          content_category: 'user_contact',
+          action: 'submit_click'
+        }, {
+          eventID: eventID
+        });
+        console.log('📊 Facebook Pixel Contact Event Sent:', eventID);
+      } catch (pixelError) {
+        console.error('⚠️ Facebook Pixel Contact tracking failed:', pixelError);
+      }
+    }
+
     // 防重复提交检查
     if (!canSubmit) {
       showToast('请勿频繁提交，请稍后再试', 'error');
